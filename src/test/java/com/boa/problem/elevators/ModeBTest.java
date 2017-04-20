@@ -1,0 +1,139 @@
+package com.boa.problem.elevators;
+
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
+
+import java.util.LinkedList;
+import java.util.List;
+import java.util.NavigableSet;
+import java.util.TreeSet;
+
+/**
+ * Created by calverst on 4/19/17.
+ */
+public class ModeBTest {
+
+    private ProblemSetup setup;
+
+    @Before
+    public void setup() {
+        setup = new ProblemSetupImpl(Elevator.MAX_FLOOR);
+    }
+
+    @Test
+    public void testScenarioOne() throws ValidationException {
+        Solver solver = setup.parse("B:10:8-1");
+        SolutionPrinter printer = new SolutionPrinterImpl();
+        Assert.assertEquals("10 8 1 (9)", printer.print(solver.solve()));
+    }
+
+    @Test
+    public void testScenarioTwo() throws ValidationException {
+        Solver solver = setup.parse("B:9:1-5,1-6,1-5");
+        SolutionPrinter printer = new SolutionPrinterImpl();
+        Assert.assertEquals("9 1 5 6 (13)", printer.print(solver.solve()));
+    }
+
+    @Test
+    public void testScenarioThree() throws ValidationException {
+        Solver solver = setup.parse("B:2:4-1,4-2,6-8");
+        SolutionPrinter printer = new SolutionPrinterImpl();
+        Assert.assertEquals("2 4 2 1 6 8 (12)", printer.print(solver.solve()));
+    }
+
+    @Test
+    public void testScenarioFour() throws ValidationException {
+        Solver solver = setup.parse("B:3:7-9,3-7,5-8,7-11,11-1");
+        SolutionPrinter printer = new SolutionPrinterImpl();
+        Assert.assertEquals("3 5 7 8 9 11 1 (18)", printer.print(solver.solve()));
+    }
+
+    @Test
+    public void testScenarioFive() throws ValidationException {
+        Solver solver = setup.parse("B:7:11-6,10-5,6-8,7-4,12-7,8-9");
+        SolutionPrinter printer = new SolutionPrinterImpl();
+        Assert.assertEquals("7 11 10 6 5 6 8 12 7 4 8 9 (30)", printer.print(solver.solve()));
+    }
+
+    @Test
+    public void testScenarioSix() throws ValidationException {
+        Solver solver = setup.parse("B:6:1-8,6-8");
+        SolutionPrinter printer = new SolutionPrinterImpl();
+        Assert.assertEquals("6 1 6 8 (12)", printer.print(solver.solve()));
+    }
+
+    @Test
+    public void testRequestAscTrue() throws ValidationException {
+        Request req = new Request(2,1);
+        ModeB b = new ModeB(1,null);
+        Assert.assertTrue(b.ascending(req));
+    }
+
+    @Test
+    public void testRequestAscFalse() throws ValidationException {
+        ModeB b = new ModeB(1,null);
+        Request req = new Request(1,2);
+        Assert.assertFalse(b.ascending(req));
+    }
+
+    @Test
+    public void testRequestSameDirection() throws ValidationException {
+        Request previous = new Request(2,1);
+        Request current = new Request(6,5);
+        ModeB b = new ModeB(1,null);
+        Assert.assertTrue(b.sameDirection(previous, current));
+    }
+
+    @Test
+    public void testRequestOppositeDirection() throws ValidationException {
+        Request previous = new Request(2,1);
+        Request current = new Request(5,6);
+        ModeB b = new ModeB(1,null);
+        Assert.assertFalse(b.sameDirection(previous, current));
+    }
+
+    @Test
+    public void testAddIfNotMatchesAdd() throws ValidationException {
+        ModeB b = new ModeB(1,null);
+        List<Integer> solution = new LinkedList<Integer>();
+        b.addIfNotMatches(2, solution);
+        Assert.assertEquals(1, solution.size());
+        Assert.assertEquals(2, solution.get(0).intValue());
+    }
+
+    @Test
+    public void testAddIfNotMatchesSkip() throws ValidationException {
+        ModeB b = new ModeB(1,null);
+        List<Integer> solution = new LinkedList<Integer>();
+        b.addIfNotMatches(1, solution);
+        Assert.assertEquals(0, solution.size());
+    }
+
+    @Test
+    public void testAddBasedOnCurrentAsc() throws ValidationException {
+        ModeB b = new ModeB(1,null);
+        List<Integer> solution = new LinkedList<Integer>();
+        NavigableSet<Integer> floors = new TreeSet<Integer>();
+        floors.add(2);
+        floors.add(3);
+        b.addBasedOnCurrent(false, solution, floors);
+        Assert.assertEquals(2, solution.size());
+        Assert.assertEquals(2, solution.get(0).intValue());
+        Assert.assertEquals(3, solution.get(1).intValue());
+    }
+
+    @Test
+    public void testAddBasedOnCurrentDesc() throws ValidationException {
+        ModeB b = new ModeB(1,null);
+        List<Integer> solution = new LinkedList<Integer>();
+        NavigableSet<Integer> floors = new TreeSet<Integer>();
+        floors.add(2);
+        floors.add(3);
+        b.addBasedOnCurrent(true, solution, floors);
+        Assert.assertEquals(2, solution.size());
+        Assert.assertEquals(3, solution.get(0).intValue());
+        Assert.assertEquals(2, solution.get(1).intValue());
+    }
+
+}
