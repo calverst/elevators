@@ -1,2 +1,0 @@
-#!/bin/bash
-java -jar target/elevators-1.0-SNAPSHOT-jar-with-dependencies.jar A:$1

@@ -11,12 +11,10 @@ public class ProblemSetupImpl implements ProblemSetup {
     private final static String COLON = ":";
     private final static String COMMA = ",";
     private final static String DASH = "-";
-    private final static String MODE_A = "A";
-    private final static String MODE_B = "B";
 
     private final int max;
 
-    public final static Pattern INPUT_PATTERN = Pattern.compile("^[AB]:\\d+:\\d+-\\d+(,\\d+-\\d+)*$");
+    public final static Pattern INPUT_PATTERN = Pattern.compile("^\\d+:\\d+-\\d+(,\\d+-\\d+)*$");
     //could also add the full regex validation, which seem overkill here
     //private final static Pattern INPUT_PATTERN = Pattern.compile("^[AB]:[1-9]|1[0-2]:..............");
 
@@ -25,19 +23,13 @@ public class ProblemSetupImpl implements ProblemSetup {
     }
 
     @Override
-    public Solver parse(String data) throws ValidationException{
+    public InputData parse(String data) throws ValidationException{
         if (INPUT_PATTERN.matcher(data).matches()) {
             String[] out = data.split(COLON);
-            if (out.length != 3) {
+            if (out.length != 2) {
                 throw new UnexpectedCountException(out.length);
             }
-            if (MODE_A.equals(out[0])) {
-                return new ModeA(validFloor(Integer.parseInt(out[1])), produceRequests(out[2]));
-            } else if (MODE_B.equals(out[0])) {
-                return new ModeB(validFloor(Integer.parseInt(out[1])), produceRequests(out[2]));
-            } else {
-                throw new ValidationException("Unknown Mode");
-            }
+            return new InputData(validFloor(Integer.parseInt(out[0])), produceRequests(out[1]));
         } else {
             throw new ValidationException(data);
         }

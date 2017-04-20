@@ -6,5 +6,5 @@ import java.util.List;
  * Created by calverst on 4/19/17.
  */
 public interface Solver {
-    List<Integer> solve();
+    List<Integer> solve(InputData data);
 }

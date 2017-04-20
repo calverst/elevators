@@ -1,2 +1,7 @@
 #!/bin/bash
 mvn clean assembly:assembly
+cp target/elevators-1.0-SNAPSHOT-jar-with-dependencies.jar el.jar
+echo -e '\nMode A\n'
+java -jar el.jar src/test/resources/input.txt A
+echo -e '\nMode B\n'
+java -jar el.jar src/test/resources/input.txt B

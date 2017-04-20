@@ -6,21 +6,16 @@ import java.util.*;
  * Created by calverst on 4/19/17.
  */
 public class ModeB implements Solver {
-    //Mode base class seem overkill
-    protected int start;
-    protected final List<Request> requests;
-    public ModeB(int start, List<Request> requests) {
-        this.start = start;
-        this.requests = requests;
-    }
+    private int start;
     @Override
-    public List<Integer> solve() {
+    public List<Integer> solve(InputData data) {
         List<Integer> solution = new LinkedList<Integer>();
+        start = data.getStart();
         solution.add(start);
         Request previous = null;
         NavigableSet<Integer> floors = new TreeSet<Integer>();
         Boolean asc = null;
-        for (Request current:requests) {
+        for (Request current:data.getRequests()) {
             asc = ascending(current);
             if (previous == null) {
                 previous = current;

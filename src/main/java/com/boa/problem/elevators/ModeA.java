@@ -7,18 +7,12 @@ import java.util.List;
  * Created by calverst on 4/19/17.
  */
 public class ModeA implements Solver {
-    //Mode base class seem overkill
-    protected int start;
-    protected final List<Request> requests;
-    public ModeA(int start, List<Request> requests) {
-        this.start = start;
-        this.requests = requests;
-    }
     @Override
-    public List<Integer> solve() {
+    public List<Integer> solve(InputData data) {
         List<Integer> solution = new LinkedList<Integer>();
+        int start = data.getStart();
         solution.add(start);
-        for (Request request:requests) {
+        for (Request request:data.getRequests()) {
             if (request.getStart() != start) {
                 solution.add(request.getStart());
             }
